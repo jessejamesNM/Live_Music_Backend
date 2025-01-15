@@ -19,12 +19,16 @@ def initialize_firebase():
     # Convierte la cadena JSON en un diccionario
     try:
         cred_dict = json.loads(firebase_credentials)
-    except json.JSONDecodeError:
-        raise ValueError("La variable de entorno FIREBASE_CREDENTIALS no contiene un JSON válido.")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"La variable de entorno FIREBASE_CREDENTIALS no contiene un JSON válido: {str(e)}")
 
-    # Inicializa Firebase Admin SDK
-    cred = credentials.Certificate(cred_dict)
-    firebase_admin.initialize_app(cred)
+    # Inicializa Firebase Admin SDK con el diccionario de credenciales
+    try:
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+        print("Firebase inicializado correctamente.")
+    except Exception as e:
+        raise ValueError(f"Error al inicializar Firebase: {str(e)}")
 
 # Ruta para enviar notificaciones
 @app.route('/send-notification', methods=['POST'])
@@ -54,13 +58,20 @@ def send_notification():
     try:
         # Enviar la notificación
         response = messaging.send(message)
+        print(f"Notificación enviada correctamente. Message ID: {response}")
         return jsonify({"success": True, "message_id": response})
     except Exception as e:
+        print(f"Error al enviar la notificación: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 # Inicializa Firebase al iniciar la aplicación
-initialize_firebase()
+try:
+    initialize_firebase()
+except Exception as e:
+    print(f"Error crítico al inicializar Firebase: {str(e)}")
+    exit(1)
 
 # Iniciar la aplicación Flask
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get("PORT", 10000))  # Usa el puerto de Render o 10000 por defecto
+    app.run(host='0.0.0.0', port=port)
