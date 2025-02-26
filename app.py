@@ -18,13 +18,13 @@ def initialize_firebase():
 
     # Convierte la cadena JSON en un diccionario
     try:
-        cred_dict = json.loads(firebase_credentials)
+        cred_dict = json.loads(firebase_credentials)  # Convierte la cadena JSON en un diccionario
     except json.JSONDecodeError as e:
         raise ValueError(f"La variable de entorno FIREBASE_CREDENTIALS no contiene un JSON válido: {str(e)}")
 
     # Inicializa Firebase Admin SDK con el diccionario de credenciales
     try:
-        cred = credentials.Certificate(cred_dict)
+        cred = credentials.Certificate(cred_dict)  # Usa el diccionario directamente
         firebase_admin.initialize_app(cred)
         print("Firebase inicializado correctamente.")
     except Exception as e:
