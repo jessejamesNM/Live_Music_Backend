@@ -10,7 +10,7 @@ app = Flask(__name__)
 # Cargar credenciales de Firebase desde una variable de entorno
 def initialize_firebase():
     # Obtén la cadena JSON de la variable de entorno
-    firebase_credentials = os.getenv(FIREBASE_CREDENTIALS)
+    firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
 
     # Verifica si la variable de entorno está configurada
     if not firebase_credentials:
