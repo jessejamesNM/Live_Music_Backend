@@ -37,7 +37,6 @@ def initialize_firebase():
 
 # Ruta para enviar notificaciones
 @app.route('/send-notification', methods=['POST'])
-@@ -54,13 +58,20 @@
     try:
         # Enviar la notificación
         response = messaging.send(message)
